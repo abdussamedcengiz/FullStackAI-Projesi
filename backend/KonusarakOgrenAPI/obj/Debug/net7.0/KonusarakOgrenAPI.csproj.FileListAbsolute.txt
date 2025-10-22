@@ -1,0 +1,7 @@
+C:\Users\SAMET\Desktop\FullStackAI\FullStackAI-Projesi\backend\KonusarakOgrenAPI\obj\Debug\net7.0\KonusarakOgrenAPI.csproj.AssemblyReference.cache
+C:\Users\SAMET\Desktop\FullStackAI\FullStackAI-Projesi\backend\KonusarakOgrenAPI\obj\Debug\net7.0\KonusarakOgrenAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\SAMET\Desktop\FullStackAI\FullStackAI-Projesi\backend\KonusarakOgrenAPI\obj\Debug\net7.0\KonusarakOgrenAPI.AssemblyInfoInputs.cache
+C:\Users\SAMET\Desktop\FullStackAI\FullStackAI-Projesi\backend\KonusarakOgrenAPI\obj\Debug\net7.0\KonusarakOgrenAPI.AssemblyInfo.cs
+C:\Users\SAMET\Desktop\FullStackAI\FullStackAI-Projesi\backend\KonusarakOgrenAPI\obj\Debug\net7.0\KonusarakOgrenAPI.csproj.CoreCompileInputs.cache
+C:\Users\SAMET\Desktop\FullStackAI\FullStackAI-Projesi\backend\KonusarakOgrenAPI\obj\Debug\net7.0\KonusarakOgrenAPI.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\SAMET\Desktop\FullStackAI\FullStackAI-Projesi\backend\KonusarakOgrenAPI\obj\Debug\net7.0\KonusarakOgrenAPI.MvcApplicationPartsAssemblyInfo.cache
