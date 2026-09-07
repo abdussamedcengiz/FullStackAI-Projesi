@@ -1,3 +1,17 @@
+# ONCEDEN fastapi ve uvicorn BU LISTEDE YOKTU -- oysa app.py ikisini
+# de import ediyor. Kurulum tesaduffen calisiyordu: gradio kendi
+# bagimliligi olarak fastapi'yi getiriyor. Gradio bir gun bunu
+# degistirse ya da surumunu sabitleseydi kurulum "ImportError" ile
+# patlardi. Dolayli bagimliliga guvenmek kirilgan bir kurulumdur;
+# kullandigin her sey listede olmali.
+fastapi
+uvicorn[standard]
+
 gradio
 transformers
+
+# torch: transformers'in model calistirmak icin ihtiyaci olan motor.
+# DIKKAT: bu paket buyuk (~2 GB). Sadece CPU yetiyorsa daha kucuk
+# surumu su sekilde kurulabilir:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
 torch
