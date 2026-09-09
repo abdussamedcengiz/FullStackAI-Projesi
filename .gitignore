@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------
+# .NET
+# ---------------------------------------------------------------
+# bin/ ve obj/ DERLEME CIKTILARIDIR: kaynak koddan yeniden uretilirler.
+# Bu depoda 78 dosya ve ~24 MB olarak takip ediliyorlardi. Sonuclari:
+#   - Her derlemeden sonra onlarca "degisiklik" cikiyor, gercek
+#     degisiklikler bu gurultunun icinde kayboluyordu.
+#   - Ikili dosyalar birlestirilemez; iki kisi calissa her derlemede
+#     cakisma yasanirdi.
+#   - Depoyu klonlamak gereksiz yere uzun suruyordu.
+bin/
+obj/
+
+# Kullanici ozel Visual Studio / Rider ayarlari
+*.user
+*.suo
+.vs/
+.idea/
+
+# ---------------------------------------------------------------
+# Veritabani
+# ---------------------------------------------------------------
+# SQLite dosyasi UYGULAMA VERISIDIR, kaynak kod degil. Uygulama
+# acilirken migration'lari calistirip kendisi olusturuyor
+# (Program.cs -> db.Database.Migrate()).
+#
+# -shm ve -wal dosyalari ise calisan bir veritabaninin gecici
+# durum dosyalari; commit'lenmeleri hicbir anlam tasimaz.
+*.db
+*.db-shm
+*.db-wal
+
+# ---------------------------------------------------------------
+# Python (ai-service)
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Hugging Face model onbellegi -- gigabaytlarca dosya
+.cache/
+
+# ---------------------------------------------------------------
+# Node (frontend)
+# ---------------------------------------------------------------
+node_modules/
+build/
+dist/
+.expo/
+
+# ---------------------------------------------------------------
+# Ortam degiskenleri -- ASLA git'e girmez
+# ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------
+# Isletim sistemi / editor
+# ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.log

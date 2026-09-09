@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 
-const API_BASE = "http://localhost:5165/api/chat"; // <-- backend API'nizin gerçek portunu kullandığınızdan emin olun
+// Backend adresi ortam degiskeninden geliyor.
+//
+// Onceden koda gomuluydu ve mobil istemci BASKA bir port yaziyordu
+// (5000) -- ikisi ayni backend'e baktigini saniyordu ama biri
+// yanlisti. Gercek port launchSettings.json'da 5165.
+//
+// Create React App yalnizca "REACT_APP_" ile baslayan degiskenleri
+// pakete gomer. Deger build sirasinda gomulur, calisma aninda
+// okunmaz -- degistirirsen yeniden build gerekir.
+const API_BASE = `${process.env.REACT_APP_API_URL || "http://localhost:5165"}/api/chat`;
 
 export default function App() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const sentimentColor = (sentiment) => {
     if (sentiment === "NEGATIVE" || sentiment === "negative") return "bg-red-100 border-red-400 text-red-700";
@@ -16,33 +26,77 @@ export default function App() {
   const send = async () => {
     if (!text.trim() || loading) return;
     setLoading(true);
+    setError("");
+
     try {
       const res = await fetch(`${API_BASE}/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, userId: 1 }) // örnek userId, gerçek kimlik eklenebilir
+        body: JSON.stringify({ text, userId: 1 }) // kimlik dogrulama henüz yok
       });
+
+      // res.ok KONTROL EDILIYOR.
+      // Onceden dogrudan res.json() cagriliyordu: sunucu 400 ya da
+      // 500 donse bile arayuz cevabi "mesaj" sanip listeye ekliyordu.
+      if (!res.ok) {
+        throw new Error(`Sunucu ${res.status} döndü`);
+      }
+
       const msg = await res.json();
-      setMessages([...messages, { ...msg, me: true }]);
+      // Fonksiyonel guncelleme: "messages" bagimliligina takilmadan
+      // her zaman en guncel listeye ekler.
+      setMessages((prev) => [...prev, { ...msg, me: true }]);
       setText("");
-    } catch {
-      alert("Mesaj gönderilemedi. API bağlantısını kontrol edin.");
+    } catch (err) {
+      // alert() yerine ekran ici mesaj: alert sayfayi bloklar ve
+      // mobil tarayicilarda rahatsiz edicidir.
+      setError("Mesaj gönderilemedi. API çalışıyor mu?");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  // İlk açılışta eski mesajları API'den çekmek için (opsiyonel):
+  // İlk açılışta eski mesajları getir.
   React.useEffect(() => {
+    let iptal = false;
+
     fetch(API_BASE)
-      .then(r => r.json())
-      .then(msgs => setMessages(msgs || []));
+      .then((r) => {
+        if (!r.ok) throw new Error(`Sunucu ${r.status} döndü`);
+        return r.json();
+      })
+      .then((msgs) => {
+        if (!iptal) setMessages(msgs || []);
+      })
+      .catch((err) => {
+        // Onceden .catch YOKTU: API kapaliyken bu zincir islenmemis
+        // bir promise reddi uretiyor ve konsola hata basiyordu.
+        if (!iptal) setError("Geçmiş mesajlar yüklenemedi.");
+        console.error(err);
+      });
+
+    return () => {
+      iptal = true;
+    };
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-4">
         <h1 className="text-2xl font-bold mb-4">Web Chat 💬</h1>
+
+        {error && (
+          <p role="alert" className="mb-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
         <div className="h-96 overflow-y-auto space-y-2 mb-3 pr-1">
+          {messages.length === 0 && !error && (
+            <p className="text-center text-sm text-gray-400 py-8">
+              Henüz mesaj yok. İlk mesajı sen yaz.
+            </p>
+          )}
           {messages.map((m) => (
             <div
               key={m.id}
@@ -68,7 +122,7 @@ export default function App() {
           />
           <button
             onClick={send}
-            disabled={loading}
+            disabled={loading || !text.trim()}
             className="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300"
           >
             Gönder
